@@ -18,6 +18,7 @@ from wsgiref.simple_server import make_server
 from file_util import *
 from mdx_util import *
 from mdict_query import IndexBuilder
+from lemma import LemmaDB
 
 """
 browser URL:
@@ -55,6 +56,9 @@ resource_path = os.path.join(base_path, 'mdx')
 print("resouce path : " + resource_path)
 builder = None
 
+lm = LemmaDB()
+lm.load('lemma.en.txt')
+
 
 def get_url_map():
     result = {}
@@ -80,21 +84,23 @@ def application(environ, start_response):
     url_map = get_url_map()
 
     if path_info in url_map:
+        # resource in url_map
         url_file = url_map[path_info]
         content_type = content_type_map.get(file_util_get_ext(url_file), 'text/html; charset=utf-8')
         start_response('200 OK', [('Content-Type', content_type)])
         return [file_util_read_byte(url_file)]
     elif file_util_get_ext(path_info) in content_type_map:
+        # extension in content type
         content_type = content_type_map.get(file_util_get_ext(path_info), 'text/html; charset=utf-8')
         start_response('200 OK', [('Content-Type', content_type)])
         return get_definition_mdd(path_info, builder)
     else:
+        # query for word
         start_response('200 OK', [('Content-Type', 'text/html; charset=utf-8')])
-        return get_definition_mdx(path_info[1:], builder)
-
-
-    start_response('200 OK', [('Content-Type', 'text/html; charset=utf-8')])
-    return [b'<h1>WSGIServer ok!</h1>']
+        stem = lm.word_stem(word)
+        if len(stem):
+            return get_definition_mdx(stem[0], builder)
+        return get_definition_mdx(word, builder)
 
 
 # 新线程执行的代码
