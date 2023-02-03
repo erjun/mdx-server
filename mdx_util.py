@@ -31,7 +31,7 @@ def get_definition_mdx(word, builder):
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         # base_path = sys._MEIPASS
-        base_path = os.path.dirname(sys.executable)
+        base_path = os.path.abspath(".")
     except Exception:
         base_path = os.path.abspath(".")
             

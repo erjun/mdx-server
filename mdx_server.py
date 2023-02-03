@@ -47,7 +47,7 @@ content_type_map = {
 try:
     # PyInstaller creates a temp folder and stores path in _MEIPASS
     #base_path = sys._MEIPASS
-    base_path = os.path.dirname(sys.executable)
+    base_path = os.path.abspath(".")
 except Exception:
     base_path = os.path.abspath(".")
         
@@ -98,10 +98,10 @@ def application(environ, start_response):
 
 
 # 新线程执行的代码
-def loop():
+def loop(port):
     # 创建一个服务器，IP地址为空，端口是8000，处理函数是application:
-    httpd = make_server('', 8000, application)
-    print("Serving HTTP on port 8000...")
+    httpd = make_server('', port, application)
+    print("Serving HTTP on port " + str(port) + "...")
     # 开始监听HTTP请求:
     httpd.serve_forever()
 
@@ -110,6 +110,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("filename", nargs='?', help="mdx file name")
+    parser.add_argument("port", nargs='?', type=int, default=8000, help="port")
     args = parser.parse_args()
 
     # use GUI to select file, default to extract
@@ -122,5 +123,5 @@ if __name__ == '__main__':
         print("Please specify a valid MDX/MDD file")
     else:
         builder = IndexBuilder(args.filename)
-        t = threading.Thread(target=loop, args=())
+        t = threading.Thread(target=loop, args=(args.port,))
         t.start()
