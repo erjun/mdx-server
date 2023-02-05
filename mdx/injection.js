@@ -23,18 +23,24 @@ function lm5Init() {
     get: (searchParams, prop) => searchParams.get(prop),
   });
   let pos = params.pos;
-  $(".dictentry:not(.bussdict)")
+  let $dicts = $(".dictentry:not(.bussdict)");
+  $dicts
     .find(".lm5pp_POS")
     .each((i, elem) => {
-      if ($(elem).text().trim() == pos) {
+      if (has) return;
+      if ($(elem).text().trim().indexOf(pos) > -1) {
         has = true;
-        $(elem)
-          .parents(".dictentry")
-          .find(".LDOCE5pp_sensefold")
+        let $curDict = $(elem).parents(".dictentry");
+
+        $curDict
+          .find(".foldsign_fold")
           .each((i, elem) => {
             $(elem).click();
           });
-        $(elem).parents(".dictentry")[0].scrollIntoView();
+        if ($dicts.index($curDict) > 0) {
+          $(elem).parents(".dictentry")[0].scrollIntoView();
+        }
+
       }
     });
   if (pos && !has) {
@@ -50,7 +56,7 @@ $(document).ready(function () {
   $("body a").click(function () {
     var tag = $(this).attr("href");
     if (!tag) {
-      return;
+      return false;
     }
     if (tag.startsWith("sound://")) {
       $("#audiotag").attr("src", "/" + tag.substr("sound://".length));
@@ -58,10 +64,12 @@ $(document).ready(function () {
       try {
         audioElement = document.getElementById("audiotag");
         audioElement.play();
-      } catch (err) {}
-      return;
+        return false;
+      } catch (err) { }
+      return false;
     }
   });
+  $("body .EXAMPLE a.speaker").each((i, e) => { $(e).attr('title', '') })
 
   let type = getDictTydpe();
   if (type == "lm5") {
@@ -72,3 +80,4 @@ $(document).ready(function () {
     v5aInit();
   }
 });
+

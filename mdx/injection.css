@@ -1,2 +1,6 @@
 /*injection.css*/
 body{}
+.cn_txt::before{
+    content: '';
+    display: block;
+}
