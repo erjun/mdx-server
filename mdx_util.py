@@ -19,7 +19,7 @@ def get_definition_mdx(word, builder):
     if rst is not None:
         link = rst.group(1).strip()
         content = builder.mdx_lookup(link)
-    str_content = ""
+    str_content = "<style>.lm5ppbody .EXAMPLE .cn_txt,.lm5ppbody .Error .cn_txt,.lm5ppbody .cn_txt{display:none;}</style>"
     if len(content) > 0:
         for c in content:
             str_content += c.replace("\r\n","").replace("entry:/","")
