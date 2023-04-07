@@ -4,3 +4,20 @@ body{}
     content: '';
     display: block;
 }
+.speaker.fa {
+    display: inline-block;
+    font: normal normal normal 12px/1 icomoon;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+.amefile {
+    color: #4693db;
+    font-size: 130%;
+    padding-left: 5px;
+}
+.brefile {
+    color: #fa6360;
+    font-size: 130%;
+    padding-left: 5px;
+}

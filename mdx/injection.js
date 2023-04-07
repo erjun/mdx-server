@@ -22,6 +22,14 @@ function lm5Init() {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
+  if(params.speaker){
+    $(".frequent.Head .speaker").appendTo('body');
+    $('.lm5ppbody').hide();
+    $('body').contents().filter(function() {
+        return this.nodeType == 3;
+    }).remove()
+    return
+  }
   let pos = params.pos;
   let $dicts = $(".dictentry:not(.bussdict)");
   $dicts
@@ -81,3 +89,9 @@ $(document).ready(function () {
   }
 });
 
+function test(){
+  var style = document.createElement('style');
+  style.innerHTML = '.lm5ppbody { display:none;}';
+  document.getElementsByTagName('head')[0].appendChild(style);
+}
+// test()
